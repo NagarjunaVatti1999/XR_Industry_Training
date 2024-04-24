@@ -27,6 +27,6 @@ public class SceneChanger : MonoBehaviour
     }
     public void ExtiSScene(int intIndex)
     {
-        SceneManager.LoadScene(intIndex);
+        Application.Quit();
     }
 }
