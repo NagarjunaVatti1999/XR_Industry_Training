@@ -1,3 +1,4 @@
+using System.Collections;
 using ReadyPlayerMe.Core;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -10,22 +11,14 @@ public class TriggerBox : MonoBehaviour
     [SerializeField] AudioClip audioclip;
     [SerializeField] VoiceHandler voiceHandler;
 
-    [SerializeField] Button xrbutton;
+    [SerializeField] Canvas buttons;
     private float timer = 0f;
 
     private void Start() {
-        xrbutton.gameObject.SetActive(false);
+        buttons.gameObject.SetActive(false);
     }
     private void Update() {
 
-        if(!isTalking)return;
-        if(timer >= audioclip.length)
-        {
-            //isTalking = false;
-            //transform.GetComponent<TriggerBox>().enabled = false;
-            xrbutton.gameObject.SetActive(true);
-        }
-        timer += Time.deltaTime;
     
     }
     private void OnTriggerEnter(Collider other) {
@@ -36,7 +29,12 @@ public class TriggerBox : MonoBehaviour
             timer = 0f;
             isTalking = true;
             PlayAudio();
+            Invoke(nameof(ActivateButton), audioclip.length);
         }
+    }
+    void ActivateButton()
+    {
+        buttons.gameObject.SetActive(true);
     }
     private void PlayAudio()
     {

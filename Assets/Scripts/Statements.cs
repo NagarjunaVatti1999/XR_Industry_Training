@@ -12,5 +12,6 @@ public enum Statements
    Sphere, 
    Cone,
    Packaging,
-   NextSteps
+   NextSteps,
+   ObjectAdded
 }

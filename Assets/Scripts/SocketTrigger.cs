@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ReadyPlayerMe.Core;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -17,15 +18,22 @@ public class SocketTrigger : MonoBehaviour
 
     public void OnObjectEntered(SelectEnterEventArgs arg0)
     {
-        Debug.Log("Entered Socket");
         IXRSelectInteractable obj = socketInteractor.GetOldestInteractableSelected();
         if(obj!=null)
         {
             AvatarAudio.Instance.PlayMessage(obj.transform.gameObject);
+            AddObjectScore(obj);
+            obj.transform.GetComponent<SetObjectState>().statements = Statements.ObjectAdded; //state changed to object added
         }
-        
     }
 
+    private void AddObjectScore(IXRSelectInteractable obj)
+    {
+        if(obj.transform.GetComponent<SetObjectState>().statements != Statements.ObjectAdded)
+        {
+            ScoreManager.Instance.AddScore();
+        }
+    }
     void Update()
     {
         

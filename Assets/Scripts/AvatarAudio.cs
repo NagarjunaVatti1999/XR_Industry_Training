@@ -13,7 +13,7 @@ public class AvatarAudio : MonoBehaviour
     public static AvatarAudio Instance {get; private set;}
     [SerializeField] VoiceHandler voiceHandler;
     [SerializeField] SOAudios[] audioClips;
-    [SerializeField] Animator avatarAnimator;
+    [SerializeField] AvatarController avatarController;
 
     AudioClip clip;
     private void Awake() {
@@ -27,15 +27,17 @@ public class AvatarAudio : MonoBehaviour
     public void PlayMessage(GameObject go)
     {
         Statements curr_state = go.GetComponent<SetObjectState>().GetObjectState();
-        //Debug.Log("Current State : "+curr_state);
         foreach(SOAudios audio in audioClips)
         {
             if(curr_state == Statements.None)return;
             if(audio.state == curr_state)
             {
                 clip = audio.audioClip;
-                voiceHandler.PlayAudioClip(clip);
-                avatarAnimator.SetBool("talk", true); 
+                PlayAudioMessage(clip);
+                avatarController.PlayTalkAnim(true);
+
+                avatarController.SetNavMeshAgent(false);
+
                 Invoke(nameof(StopTalking), clip.length);
             }
         }
@@ -44,12 +46,11 @@ public class AvatarAudio : MonoBehaviour
     // Update is called once per frame
     private void StopTalking()
     {
-        avatarAnimator.SetBool("talk", false);
+        avatarController.PlayTalkAnim(false);
+        avatarController.SetNavMeshAgent(true);
     }
-    void Update()
+    public void PlayAudioMessage(AudioClip clip)
     {
-
+        voiceHandler.PlayAudioClip(clip);
     }
-    
-    
 }
